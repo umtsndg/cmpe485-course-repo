@@ -669,8 +669,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69d15e70e2cc5304f820d3e21b0b07bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetRb: {fileID: 0}
-  forceDirection: {x: 0, y: 0, z: 1}
+  targetRb: {fileID: 535440526}
+  forceDirection: {x: 1, y: 0, z: 0}
   forceStrength: 5
   forceMode: 0
 --- !u!1 &600148809
