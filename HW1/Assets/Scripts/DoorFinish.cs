@@ -1,16 +1,32 @@
+using System.Collections;
 using UnityEngine;
 
 public class DoorFinish : MonoBehaviour
 {
+    public DoorController doorController;
+    private bool activated = false;
+
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Key"))
+        if (activated) return;
+
+        if (other.transform.root.CompareTag("Key"))
         {
-            GameManager gm = FindObjectOfType<GameManager>();
-            if (gm != null)
-            {
-                gm.WinGame();
-            }
+            activated = true;
+            StartCoroutine(OpenThenWin());
+        }
+    }
+
+    IEnumerator OpenThenWin()
+    {
+        doorController.OpenDoor();
+
+        yield return new WaitForSeconds(2f);
+
+        GameManager gm = FindObjectOfType<GameManager>();
+        if (gm != null)
+        {
+            gm.WinGame();
         }
     }
 }

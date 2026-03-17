@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 public class GuardPatrol : MonoBehaviour
@@ -17,6 +16,7 @@ public class GuardPatrol : MonoBehaviour
     public Transform player;
     public float detectionDistance = 2f;
     public float fieldOfViewAngle = 60f;
+    public LayerMask visionMask;
 
     [Header("Animation")]
     public Animator animator;
@@ -40,7 +40,7 @@ public class GuardPatrol : MonoBehaviour
         }
     }
 
-    IEnumerator PatrolRoutine()
+    System.Collections.IEnumerator PatrolRoutine()
     {
         while (true)
         {
@@ -64,7 +64,6 @@ public class GuardPatrol : MonoBehaviour
                 }
 
                 transform.position += direction * moveSpeed * Time.deltaTime;
-
                 yield return null;
             }
 
@@ -86,22 +85,40 @@ public class GuardPatrol : MonoBehaviour
     {
         if (player == null) return;
 
-        Vector3 toPlayer = player.position - transform.position;
-        toPlayer.y = 0f;
+        Vector3 guardEye = transform.position + Vector3.up * 1.5f;
+        Vector3 playerTarget = player.position + Vector3.up * 1.0f;
 
+        Vector3 toPlayer = playerTarget - guardEye;
         float distance = toPlayer.magnitude;
-        if (distance > detectionDistance) return;
+
+        if (distance > detectionDistance)
+            return;
 
         float angle = Vector3.Angle(transform.forward, toPlayer);
 
-        if (angle <= fieldOfViewAngle * 0.5f)
-        {
-            playerCaught = true;
+        if (angle > fieldOfViewAngle * 0.5f)
+            return;
 
-            GameManager gm = FindObjectOfType<GameManager>();
-            if (gm != null)
+        RaycastHit hit;
+        if (Physics.Raycast(
+            guardEye,
+            toPlayer.normalized,
+            out hit,
+            detectionDistance,
+            visionMask,
+            QueryTriggerInteraction.Ignore))
+        {
+            Debug.DrawRay(guardEye, toPlayer.normalized * hit.distance, Color.red);
+
+            if (hit.transform.CompareTag("Player"))
             {
-                gm.FailGame();
+                playerCaught = true;
+
+                GameManager gm = FindObjectOfType<GameManager>();
+                if (gm != null)
+                {
+                    gm.FailGame();
+                }
             }
         }
     }

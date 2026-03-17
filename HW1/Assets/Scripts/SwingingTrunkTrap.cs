@@ -32,31 +32,32 @@ public class SwingingTrunkTrap : MonoBehaviour
     IEnumerator RotateToAngle(float startAngle, float endAngle, float duration)
     {
         float elapsed = 0f;
-
+        float y_angle = transform.localRotation.eulerAngles.y;
         while (elapsed < duration)
         {
             float t = elapsed / duration;
             float zAngle = Mathf.Lerp(startAngle, endAngle, t);
 
-            transform.localRotation = Quaternion.Euler(0f, 0f, zAngle);
+            transform.localRotation = Quaternion.Euler(0f, y_angle, zAngle);
 
             elapsed += Time.deltaTime;
             yield return null;
         }
 
-        transform.localRotation = Quaternion.Euler(0f, 0f, endAngle);
+        transform.localRotation = Quaternion.Euler(0f, y_angle, endAngle);
     }
-
-    private void OnTriggerEnter(Collider other)
+    public class PlayerTrapHit : MonoBehaviour
     {
-        if (!failOnTouch) return;
-
-        if (other.CompareTag("Player"))
+        private void OnControllerColliderHit(ControllerColliderHit hit)
         {
-            GameManager gm = FindObjectOfType<GameManager>();
-            if (gm != null)
+            Debug.Log("Collided with: " + hit.collider.name);
+            if (hit.collider.CompareTag("Trap"))
             {
-                gm.FailGame();
+                GameManager gm = FindObjectOfType<GameManager>();
+                if (gm != null)
+                {
+                    gm.FailGame();
+                }
             }
         }
     }
