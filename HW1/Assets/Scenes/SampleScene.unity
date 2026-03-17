@@ -5862,7 +5862,10 @@ MonoBehaviour:
   rightAngle: -60
   swingDuration: 1
   pauseAtEnds: 0.2
-  failOnTouch: 1
+  trunkCollider: {fileID: 2146751397}
+  playerMask:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!4 &237494166
 Transform:
   m_ObjectHideFlags: 0
@@ -6722,7 +6725,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 0b3522349475c664fb3b5f42aa66ede4, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.012
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -13391,7 +13394,10 @@ MonoBehaviour:
   rightAngle: -60
   swingDuration: 1
   pauseAtEnds: 0.2
-  failOnTouch: 1
+  trunkCollider: {fileID: 934575291}
+  playerMask:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!4 &497311305
 Transform:
   m_ObjectHideFlags: 0
@@ -27014,6 +27020,11 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2, y: 2.9990404, z: 0.39999998}
   m_Center: {x: 0.00000023841858, y: 1.5004798, z: 0}
+--- !u!136 &934575291 stripped
+CapsuleCollider:
+  m_CorrespondingSourceObject: {fileID: 3883429408244852108, guid: fdee3494419fd984f8a02c4c5eb590a5, type: 3}
+  m_PrefabInstance: {fileID: 849001819}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &935071924 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4719523551881640041, guid: d4f10c266d535f845b36a3ee1de263bf, type: 3}
@@ -69300,6 +69311,11 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 2933609718691742454, guid: ef2acff6b2ab6b940bdf5ded5fba436d, type: 3}
   m_PrefabInstance: {fileID: 2145201785}
+  m_PrefabAsset: {fileID: 0}
+--- !u!136 &2146751397 stripped
+CapsuleCollider:
+  m_CorrespondingSourceObject: {fileID: 3883429408244852108, guid: fdee3494419fd984f8a02c4c5eb590a5, type: 3}
+  m_PrefabInstance: {fileID: 603206950}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7344339244317893499
 PrefabInstance:

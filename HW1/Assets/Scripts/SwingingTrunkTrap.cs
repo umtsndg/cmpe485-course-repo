@@ -9,12 +9,20 @@ public class SwingingTrunkTrap : MonoBehaviour
     public float swingDuration = 1f;
     public float pauseAtEnds = 0.2f;
 
-    [Header("Damage")]
-    public bool failOnTouch = true;
+    [Header("Hit Detection")]
+    public CapsuleCollider trunkCollider;
+    public LayerMask playerMask;
+
+    private bool playerCaught = false;
 
     private void Start()
     {
         StartCoroutine(SwingRoutine());
+    }
+
+    private void Update()
+    {
+        CheckPlayerHit();
     }
 
     IEnumerator SwingRoutine()
@@ -32,33 +40,64 @@ public class SwingingTrunkTrap : MonoBehaviour
     IEnumerator RotateToAngle(float startAngle, float endAngle, float duration)
     {
         float elapsed = 0f;
-        float y_angle = transform.localRotation.eulerAngles.y;
+
         while (elapsed < duration)
         {
             float t = elapsed / duration;
-            float zAngle = Mathf.Lerp(startAngle, endAngle, t);
+            t = Mathf.SmoothStep(0f, 1f, t);
 
-            transform.localRotation = Quaternion.Euler(0f, y_angle, zAngle);
+            float angle = Mathf.Lerp(startAngle, endAngle, t);
+            transform.localRotation = Quaternion.Euler(0f, 0f, angle);
 
             elapsed += Time.deltaTime;
             yield return null;
         }
 
-        transform.localRotation = Quaternion.Euler(0f, y_angle, endAngle);
+        transform.localRotation = Quaternion.Euler(0f, 0f, endAngle);
     }
-    public class PlayerTrapHit : MonoBehaviour
+
+    void CheckPlayerHit()
     {
-        private void OnControllerColliderHit(ControllerColliderHit hit)
+        if (playerCaught || trunkCollider == null) return;
+
+        Vector3 center = trunkCollider.bounds.center;
+        Vector3 halfExtents = trunkCollider.bounds.extents;
+
+        Collider[] hits = Physics.OverlapBox(
+            center,
+            halfExtents,
+            trunkCollider.transform.rotation,
+            playerMask,
+            QueryTriggerInteraction.Ignore
+        );
+
+        foreach (Collider hit in hits)
         {
-            Debug.Log("Collided with: " + hit.collider.name);
-            if (hit.collider.CompareTag("Trap"))
+            if (hit.CompareTag("Player") || hit.transform.root.CompareTag("Player"))
             {
+                playerCaught = true;
+
                 GameManager gm = FindObjectOfType<GameManager>();
                 if (gm != null)
                 {
                     gm.FailGame();
                 }
+
+                break;
             }
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (trunkCollider == null) return;
+
+        Gizmos.color = Color.red;
+        Gizmos.matrix = Matrix4x4.TRS(
+            trunkCollider.bounds.center,
+            trunkCollider.transform.rotation,
+            Vector3.one
+        );
+        Gizmos.DrawWireCube(Vector3.zero, trunkCollider.bounds.size);
     }
 }
