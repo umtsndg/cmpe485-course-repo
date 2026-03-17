@@ -92,7 +92,7 @@ public class GuardPatrol : MonoBehaviour
     {
         if (player == null)
         {
-            Debug.Log("Player reference is NULL");
+            //    Debug.Log("Player reference is NULL");
             return;
         }
 
@@ -126,11 +126,11 @@ public class GuardPatrol : MonoBehaviour
         if (Physics.Raycast(guardEye, toPlayer.normalized, out hit, distance))
         {
             Debug.DrawRay(guardEye, toPlayer.normalized * hit.distance, Color.red);
-            Debug.Log("Ray hit = " + hit.transform.name + " | Tag = " + hit.transform.tag);
+            //    Debug.Log("Ray hit = " + hit.transform.name + " | Tag = " + hit.transform.tag);
 
             if (hit.transform.CompareTag("Player") || hit.transform.root.CompareTag("Player"))
             {
-                Debug.Log("PLAYER DETECTED!");
+                //        Debug.Log("PLAYER DETECTED!");
 
                 playerCaught = true;
 
@@ -143,7 +143,7 @@ public class GuardPatrol : MonoBehaviour
         }
         else
         {
-            Debug.Log("Ray hit nothing");
+            //   Debug.Log("Ray hit nothing");
         }
     }
 }
