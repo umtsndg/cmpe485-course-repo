@@ -27485,7 +27485,7 @@ GameObject:
   - component: {fileID: 963194230}
   m_Layer: 6
   m_Name: Main Camera
-  m_TagString: MainCamera
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -61024,9 +61024,7 @@ MonoBehaviour:
   player: {fileID: 1541222992}
   detectionDistance: 2
   fieldOfViewAngle: 60
-  visionMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
+  visionForwardSource: {fileID: 0}
   animator: {fileID: 1937233538}
 --- !u!1001 &1938872915
 PrefabInstance:
@@ -62838,6 +62836,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 1349988990, guid: 60770bdb4dc667c45bea53db0339dc05, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 90716451578292149, guid: 60770bdb4dc667c45bea53db0339dc05, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -63037,6 +63039,10 @@ PrefabInstance:
     - target: {fileID: 2848898086878090011, guid: 60770bdb4dc667c45bea53db0339dc05, type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2848898086878090011, guid: 60770bdb4dc667c45bea53db0339dc05, type: 3}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 2854643003616989261, guid: 60770bdb4dc667c45bea53db0339dc05, type: 3}
       propertyPath: m_Layer
@@ -63369,6 +63375,10 @@ PrefabInstance:
     - target: {fileID: 8491996513887007773, guid: 60770bdb4dc667c45bea53db0339dc05, type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8491996513887007773, guid: 60770bdb4dc667c45bea53db0339dc05, type: 3}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 8638669286107959115, guid: 60770bdb4dc667c45bea53db0339dc05, type: 3}
       propertyPath: m_Layer
@@ -69028,11 +69038,9 @@ MonoBehaviour:
   waitTimeAtPoint: 0.5
   arriveThreshold: 0.1
   player: {fileID: 1541222992}
-  detectionDistance: 2
-  fieldOfViewAngle: 60
-  visionMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
+  detectionDistance: 3
+  fieldOfViewAngle: 120
+  visionForwardSource: {fileID: 0}
   animator: {fileID: 2139681253}
 --- !u!4 &2139908368 stripped
 Transform:

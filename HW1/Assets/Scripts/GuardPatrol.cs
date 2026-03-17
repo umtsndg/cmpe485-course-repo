@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class GuardPatrol : MonoBehaviour
@@ -14,20 +15,24 @@ public class GuardPatrol : MonoBehaviour
 
     [Header("Detection")]
     public Transform player;
-    public float detectionDistance = 2f;
-    public float fieldOfViewAngle = 60f;
-    public LayerMask visionMask;
+    public float detectionDistance = 5f;
+    public float fieldOfViewAngle = 120f;
 
-    [Header("Animation")]
+    [Header("Optional")]
+    public Transform visionForwardSource;
     public Animator animator;
 
     private bool goingToB = true;
     private bool playerCaught = false;
+    private CharacterController playerCC;
 
     void Start()
     {
         if (animator == null)
             animator = GetComponentInChildren<Animator>();
+
+        if (player != null)
+            playerCC = player.GetComponent<CharacterController>();
 
         StartCoroutine(PatrolRoutine());
     }
@@ -40,13 +45,14 @@ public class GuardPatrol : MonoBehaviour
         }
     }
 
-    System.Collections.IEnumerator PatrolRoutine()
+    IEnumerator PatrolRoutine()
     {
         while (true)
         {
             Transform targetPoint = goingToB ? pointB : pointA;
 
-            animator.SetBool("isWalking", true);
+            if (animator != null)
+                animator.SetBool("isWalking", true);
 
             while (Vector3.Distance(transform.position, targetPoint.position) > arriveThreshold)
             {
@@ -73,7 +79,8 @@ public class GuardPatrol : MonoBehaviour
                 targetPoint.position.z
             );
 
-            animator.SetBool("isWalking", false);
+            if (animator != null)
+                animator.SetBool("isWalking", false);
 
             yield return new WaitForSeconds(waitTimeAtPoint);
 
@@ -83,35 +90,48 @@ public class GuardPatrol : MonoBehaviour
 
     void CheckPlayerDetection()
     {
-        if (player == null) return;
+        if (player == null)
+        {
+            Debug.Log("Player reference is NULL");
+            return;
+        }
 
         Vector3 guardEye = transform.position + Vector3.up * 1.5f;
-        Vector3 playerTarget = player.position + Vector3.up * 1.0f;
+
+        Vector3 playerTarget;
+        if (playerCC != null)
+        {
+            playerTarget = playerCC.bounds.center;
+        }
+        else
+        {
+            playerTarget = player.position + Vector3.up * 1.0f;
+        }
 
         Vector3 toPlayer = playerTarget - guardEye;
         float distance = toPlayer.magnitude;
 
+        Debug.DrawRay(guardEye, toPlayer.normalized * Mathf.Min(distance, detectionDistance), Color.yellow);
+
         if (distance > detectionDistance)
             return;
 
-        float angle = Vector3.Angle(transform.forward, toPlayer);
+        Vector3 forwardDir = visionForwardSource != null ? visionForwardSource.forward : transform.forward;
+        float angle = Vector3.Angle(forwardDir, toPlayer);
 
         if (angle > fieldOfViewAngle * 0.5f)
             return;
 
         RaycastHit hit;
-        if (Physics.Raycast(
-            guardEye,
-            toPlayer.normalized,
-            out hit,
-            detectionDistance,
-            visionMask,
-            QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(guardEye, toPlayer.normalized, out hit, distance))
         {
             Debug.DrawRay(guardEye, toPlayer.normalized * hit.distance, Color.red);
+            Debug.Log("Ray hit = " + hit.transform.name + " | Tag = " + hit.transform.tag);
 
-            if (hit.transform.CompareTag("Player"))
+            if (hit.transform.CompareTag("Player") || hit.transform.root.CompareTag("Player"))
             {
+                Debug.Log("PLAYER DETECTED!");
+
                 playerCaught = true;
 
                 GameManager gm = FindObjectOfType<GameManager>();
@@ -120,6 +140,10 @@ public class GuardPatrol : MonoBehaviour
                     gm.FailGame();
                 }
             }
+        }
+        else
+        {
+            Debug.Log("Ray hit nothing");
         }
     }
 }
