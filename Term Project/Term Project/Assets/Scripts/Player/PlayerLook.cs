@@ -11,8 +11,13 @@ public class PlayerLook : MonoBehaviour
     public float dashFOV = 75f;
     public float fovSmoothSpeed = 8f;
 
+    [Header("Wall Run Tilt")]
+    public float wallRunTiltSmoothSpeed = 8f;
+
     private float xRotation = 0f;
     private float yRotation = 0f;
+    private float currentTilt = 0f;
+    private float targetTilt = 0f;
 
     private bool isDashingVisual = false;
 
@@ -38,8 +43,9 @@ public class PlayerLook : MonoBehaviour
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
         yRotation += mouseX;
+        currentTilt = Mathf.Lerp(currentTilt, targetTilt, Time.deltaTime * wallRunTiltSmoothSpeed);
 
-        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        transform.localRotation = Quaternion.Euler(xRotation, 0f, currentTilt);
         playerBody.rotation = Quaternion.Euler(0f, yRotation, 0f);
 
         UpdateFOV();
@@ -56,5 +62,10 @@ public class PlayerLook : MonoBehaviour
     public void SetDashFOV(bool state)
     {
         isDashingVisual = state;
+    }
+
+    public void SetWallRunTilt(float tilt)
+    {
+        targetTilt = tilt;
     }
 }
