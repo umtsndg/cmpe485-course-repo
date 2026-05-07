@@ -3,6 +3,7 @@ using UnityEngine;
 public class EnemyHealth : MonoBehaviour
 {
     public Animator animator;
+    public EnemyMelee enemyMelee;
     public EnemyRanged enemyRanged;
 
     private bool isDead = false;
@@ -13,15 +14,29 @@ public class EnemyHealth : MonoBehaviour
 
         isDead = true;
 
+        bool diedWhileStunned = false;
+
+        if (enemyMelee != null)
+        {
+            diedWhileStunned = enemyMelee.IsStunned();
+            enemyMelee.MarkDead();
+        }
+
         if (enemyRanged != null)
         {
             enemyRanged.MarkDead();
         }
 
-
         if (animator != null)
         {
-            animator.SetTrigger("Die");
+            if (diedWhileStunned)
+            {
+                animator.SetTrigger("StunDie");
+            }
+            else
+            {
+                animator.SetTrigger("Die");
+            }
         }
 
         Destroy(gameObject, 2f);

@@ -9,7 +9,7 @@ public class EnemyMelee : MonoBehaviour
 
     [Header("Movement")]
     public float detectionRange = 10f;
-    public float attackRange = 2f;
+    public float attackRange = 1.2f;
     public float moveSpeed = 3f;
     public float rotationSpeed = 5f;
 
@@ -17,9 +17,13 @@ public class EnemyMelee : MonoBehaviour
     public float attackCooldown = 1.2f;
     public float totalAttackTime = 0.8f;
 
+    [Header("Stun")]
+    public float stunDuration = 2f;
+
     private float attackTimer = 0f;
     private bool isDead = false;
     private bool isAttacking = false;
+    private bool isStunned = false;
 
     void Start()
     {
@@ -32,6 +36,7 @@ public class EnemyMelee : MonoBehaviour
     void Update()
     {
         if (isDead) return;
+        if (isStunned) return;
         if (player == null) return;
 
         attackTimer -= Time.deltaTime;
@@ -110,7 +115,7 @@ public class EnemyMelee : MonoBehaviour
 
     public void EnableHitbox()
     {
-        if (isDead) return;
+        if (isDead || isStunned) return;
 
         if (attackHitbox != null)
         {
@@ -136,6 +141,28 @@ public class EnemyMelee : MonoBehaviour
     {
         isDead = true;
         isAttacking = false;
+        isStunned = false;
+
+        DisableHitbox();
+        CancelInvoke();
+
+        if (animator != null)
+        {
+            animator.ResetTrigger("Attack");
+            animator.ResetTrigger("Stun");
+            animator.ResetTrigger("StunEnd");
+            animator.SetBool("IsRunning", false);
+            animator.SetBool("StunLoop", false);
+        }
+    }
+
+    public void Stun()
+    {
+        if (isDead) return;
+        if (isStunned) return;
+
+        isStunned = true;
+        isAttacking = false;
 
         DisableHitbox();
         CancelInvoke();
@@ -144,6 +171,39 @@ public class EnemyMelee : MonoBehaviour
         {
             animator.ResetTrigger("Attack");
             animator.SetBool("IsRunning", false);
+            animator.SetTrigger("Stun");
         }
+
+        Invoke(nameof(EnterStunLoop), 0.15f);
+        Invoke(nameof(EndStun), stunDuration);
+    }
+
+    void EnterStunLoop()
+    {
+        if (isDead) return;
+        if (!isStunned) return;
+
+        if (animator != null)
+        {
+            animator.SetBool("StunLoop", true);
+        }
+    }
+
+    void EndStun()
+    {
+        if (isDead) return;
+
+        isStunned = false;
+
+        if (animator != null)
+        {
+            animator.SetBool("StunLoop", false);
+            animator.SetTrigger("StunEnd");
+        }
+    }
+
+    public bool IsStunned()
+    {
+        return isStunned;
     }
 }
