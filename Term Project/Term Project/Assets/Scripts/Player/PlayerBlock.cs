@@ -93,6 +93,8 @@ public class PlayerBlock : MonoBehaviour
         flatIncoming.Normalize();
 
         float angle = Vector3.Angle(flatForward, flatIncoming);
+
+        Debug.Log("Block angle: " + angle);
         return angle <= blockAngle;
     }
 

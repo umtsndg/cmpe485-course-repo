@@ -8,6 +8,19 @@ public class DeathZone : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            PlayerRespawn respawn = other.GetComponent<PlayerRespawn>();
+
+            if (respawn == null)
+            {
+                respawn = other.GetComponentInParent<PlayerRespawn>();
+            }
+
+            if (respawn != null)
+            {
+                respawn.RespawnWithSceneReset();
+                return;
+            }
+
             gameManager.RestartLevel();
         }
     }

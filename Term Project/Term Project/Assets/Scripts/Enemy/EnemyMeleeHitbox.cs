@@ -6,31 +6,37 @@ public class EnemyMeleeHitbox : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag("Player")) return;
-
         PlayerBlock playerBlock = other.GetComponentInParent<PlayerBlock>();
         PlayerHealth playerHealth = other.GetComponentInParent<PlayerHealth>();
 
-        Vector3 incomingDirection = transform.root.forward;
+        if (playerBlock == null || playerHealth == null)
+            return;
 
-        if (playerBlock != null)
+        Vector3 targetPosition;
+
+        if (playerBlock.playerView != null)
         {
-            BlockResult result = playerBlock.TryHandleIncomingHit(3, incomingDirection);
+            targetPosition = playerBlock.playerView.position;
+        }
+        else
+        {
+            targetPosition = playerBlock.transform.position;
+        }
 
-            if (result.wasBlocked)
+        Vector3 incomingDirection = (targetPosition - enemyMelee.transform.position).normalized;
+
+        BlockResult result = playerBlock.TryHandleIncomingHit(3, incomingDirection);
+
+        if (result.wasBlocked)
+        {
+            if (result.wasParried && enemyMelee != null)
             {
-                if (result.wasParried && enemyMelee != null)
-                {
-                    enemyMelee.Stun();
-                }
-
-                return;
+                enemyMelee.Stun();
             }
+
+            return;
         }
 
-        if (playerHealth != null)
-        {
-            playerHealth.Die();
-        }
+        playerHealth.Die();
     }
 }

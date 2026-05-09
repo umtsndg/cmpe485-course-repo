@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
 
     public void RestartLevel()
     {
+        PlayerRespawn.ClearSavedCheckpoint();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
