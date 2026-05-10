@@ -80,6 +80,9 @@ public class PlayerMovement : MonoBehaviour
     private float wallRunTimer;
     private float wallRunCooldownTimer = 0f;
 
+    private bool wasRunning;
+
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -101,6 +104,7 @@ public class PlayerMovement : MonoBehaviour
         CheckGround();
         CheckWalls();
         HandleSlideCamera();
+        HandleRunSound();
 
         if (wallRunCooldownTimer > 0f)
         {
@@ -129,6 +133,10 @@ public class PlayerMovement : MonoBehaviour
             if (isWallRunning)
             {
                 WallJump();
+                if (AudioManager.Instance != null)
+                {
+                    AudioManager.Instance.PlayJump();
+                }
             }
             else if (isGrounded)
             {
@@ -138,6 +146,11 @@ public class PlayerMovement : MonoBehaviour
                 }
 
                 Jump();
+                Debug.Log("AudioManager.Instance: " + AudioManager.Instance);
+                if (AudioManager.Instance != null)
+                {
+                    AudioManager.Instance.PlayJump();
+                }
             }
         }
 
@@ -166,6 +179,10 @@ public class PlayerMovement : MonoBehaviour
             }
 
             StartCoroutine(Dash());
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlayDash();
+            }
         }
 
         // Slide
@@ -336,6 +353,10 @@ public class PlayerMovement : MonoBehaviour
                 cameraOriginalLocalPos.z
             );
         }
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySlide();
+        }
     }
 
     void HandleSlide()
@@ -405,6 +426,10 @@ public class PlayerMovement : MonoBehaviour
         {
             playerLook.SetWallRunTilt(GetWallRunCameraTilt());
         }
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.StartWallRunLoop();
+        }
     }
 
     void StopWallRun()
@@ -417,6 +442,10 @@ public class PlayerMovement : MonoBehaviour
         if (playerLook != null)
         {
             playerLook.SetWallRunTilt(0f);
+        }
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.StopLoop();
         }
     }
 
@@ -505,5 +534,30 @@ public class PlayerMovement : MonoBehaviour
             Gizmos.DrawRay(transform.position, orientation.right * wallCheckDistance);
             Gizmos.DrawRay(transform.position, -orientation.right * wallCheckDistance);
         }
+    }
+
+    private void HandleRunSound()
+    {
+        bool isMoving = Mathf.Abs(Input.GetAxisRaw("Horizontal")) > 0.1f ||
+                        Mathf.Abs(Input.GetAxisRaw("Vertical")) > 0.1f;
+
+        bool shouldRunSoundPlay = isMoving && isGrounded;
+
+        if (shouldRunSoundPlay && !wasRunning)
+        {
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.StartRunLoop();
+            }
+        }
+        else if (!shouldRunSoundPlay && wasRunning)
+        {
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.StopLoop();
+            }
+        }
+
+        wasRunning = shouldRunSoundPlay;
     }
 }

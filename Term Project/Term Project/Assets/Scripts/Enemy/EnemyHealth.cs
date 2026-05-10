@@ -40,5 +40,9 @@ public class EnemyHealth : MonoBehaviour
         }
 
         Destroy(gameObject, 2f);
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayEnemyDie();
+        }
     }
 }

@@ -67,11 +67,23 @@ public class EnemyRanged : MonoBehaviour
     {
         yield return new WaitForSeconds(0.1f);
         FireSingleProjectile();
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayEnemyRangedShoot();
+        }
 
         yield return new WaitForSeconds(0.12f);
         FireSingleProjectile();
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayEnemyRangedShoot();
+        }
 
         yield return new WaitForSeconds(0.12f);
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayEnemyRangedShoot();
+        }
         FireSingleProjectile();
     }
 

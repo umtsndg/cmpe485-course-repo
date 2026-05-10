@@ -25,6 +25,9 @@ public class EnemyMelee : MonoBehaviour
     private bool isAttacking = false;
     private bool isStunned = false;
 
+    [SerializeField] private AudioSource walkAudioSource;
+    private bool isRunning = false;
+
     void Start()
     {
         if (attackHitbox != null)
@@ -45,10 +48,7 @@ public class EnemyMelee : MonoBehaviour
 
         if (distanceToPlayer > detectionRange)
         {
-            if (animator != null)
-            {
-                animator.SetBool("IsRunning", false);
-            }
+            SetRunning(false);
             return;
         }
 
@@ -56,19 +56,13 @@ public class EnemyMelee : MonoBehaviour
 
         if (distanceToPlayer > attackRange && !isAttacking)
         {
-            if (animator != null)
-            {
-                animator.SetBool("IsRunning", true);
-            }
+            SetRunning(true);
 
             MoveTowardPlayer();
         }
         else
         {
-            if (animator != null)
-            {
-                animator.SetBool("IsRunning", false);
-            }
+            SetRunning(false);
 
             if (attackTimer <= 0f && !isAttacking)
             {
@@ -108,6 +102,11 @@ public class EnemyMelee : MonoBehaviour
         if (animator != null)
         {
             animator.SetTrigger("Attack");
+        }
+
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayEnemyMeleeHit();
         }
 
         Invoke(nameof(EndAttack), totalAttackTime);
@@ -151,9 +150,10 @@ public class EnemyMelee : MonoBehaviour
             animator.ResetTrigger("Attack");
             animator.ResetTrigger("Stun");
             animator.ResetTrigger("StunEnd");
-            animator.SetBool("IsRunning", false);
             animator.SetBool("StunLoop", false);
         }
+
+        SetRunning(false);
     }
 
     public void Stun()
@@ -170,8 +170,14 @@ public class EnemyMelee : MonoBehaviour
         if (animator != null)
         {
             animator.ResetTrigger("Attack");
-            animator.SetBool("IsRunning", false);
             animator.SetTrigger("Stun");
+        }
+
+        SetRunning(false);
+
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayParry();
         }
 
         Invoke(nameof(EnterStunLoop), 0.15f);
@@ -205,5 +211,33 @@ public class EnemyMelee : MonoBehaviour
     public bool IsStunned()
     {
         return isStunned;
+    }
+
+    private void SetWalkingSound(bool shouldPlay)
+    {
+        if (walkAudioSource == null) return;
+
+        if (shouldPlay && !walkAudioSource.isPlaying)
+        {
+            walkAudioSource.Play();
+        }
+        else if (!shouldPlay && walkAudioSource.isPlaying)
+        {
+            walkAudioSource.Stop();
+        }
+    }
+
+    private void SetRunning(bool shouldRun)
+    {
+        if (isRunning == shouldRun) return;
+
+        isRunning = shouldRun;
+
+        if (animator != null)
+        {
+            animator.SetBool("IsRunning", shouldRun);
+        }
+
+        SetWalkingSound(shouldRun);
     }
 }

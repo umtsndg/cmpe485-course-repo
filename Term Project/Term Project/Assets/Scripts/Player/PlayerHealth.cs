@@ -22,6 +22,10 @@ public class PlayerHealth : MonoBehaviour
 
         isDead = true;
 
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayPlayerDie();
+        }
         if (playerRespawn != null)
         {
             playerRespawn.RespawnWithSceneReset();

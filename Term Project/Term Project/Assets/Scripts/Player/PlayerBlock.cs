@@ -136,6 +136,10 @@ public class PlayerBlock : MonoBehaviour
         }
 
         regenTimer = 0f;
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayBlock();
+        }
         return result;
     }
 

@@ -73,11 +73,19 @@ public class EnemyProjectile : MonoBehaviour
                         if (playerView != null)
                         {
                             Reflect(playerView.forward);
+                            if (AudioManager.Instance != null)
+                            {
+                                AudioManager.Instance.PlayParry();
+                            }
                             return;
                         }
                     }
 
                     Destroy(gameObject);
+                    if (AudioManager.Instance != null)
+                    {
+                        AudioManager.Instance.PlayBlock();
+                    }
                     return;
                 }
             }

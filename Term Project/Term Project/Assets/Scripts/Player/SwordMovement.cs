@@ -106,6 +106,10 @@ public class SwordMovement : MonoBehaviour
         bool hitWindowStarted = false;
         HashSet<EnemyHealth> hitEnemiesThisAttack = new HashSet<EnemyHealth>();
 
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySwordSwing();
+        }
         while (timer < halfDuration)
         {
             transform.localRotation = Quaternion.Slerp(idleQuat, attackQuat, timer / halfDuration);
