@@ -46250,13 +46250,14 @@ GameObject:
   - component: {fileID: 794563734}
   - component: {fileID: 794563733}
   - component: {fileID: 794563732}
+  - component: {fileID: 794563736}
   m_Layer: 3
-  m_Name: DeathZone
+  m_Name: DeathTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!65 &794563732
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -46285,7 +46286,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 794563731}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -46343,6 +46344,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &794563736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 794563731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96b15fd9c8646a04a84eae00607988b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &795913019 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 9078325508495222901, guid: 0d89e82b88de46a42a6b99ab1b1f981b, type: 3}

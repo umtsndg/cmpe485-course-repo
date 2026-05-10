@@ -54,18 +54,21 @@ public class MainMenuManager : MonoBehaviour
     public void LoadTutorial()
     {
         Time.timeScale = 1f;
+        PlayerRespawn.ClearSavedCheckpoint();
         SceneManager.LoadScene(tutorialSceneName);
     }
 
     public void LoadLevel2()
     {
         Time.timeScale = 1f;
+        PlayerRespawn.ClearSavedCheckpoint();
         SceneManager.LoadScene(level2SceneName);
     }
 
     public void LoadTestLevel()
     {
         Time.timeScale = 1f;
+        PlayerRespawn.ClearSavedCheckpoint();
         SceneManager.LoadScene(testLevelSceneName);
     }
 
