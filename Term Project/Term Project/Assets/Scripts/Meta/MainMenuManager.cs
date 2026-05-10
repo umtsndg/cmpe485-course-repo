@@ -10,6 +10,7 @@ public class MainMenuManager : MonoBehaviour
     [Header("Scene Names")]
     [SerializeField] private string tutorialSceneName = "TutorialScene";
     [SerializeField] private string level2SceneName = "Level2";
+    [SerializeField] private string testLevelSceneName = "TestLevel";
 
     private void Start()
     {
@@ -60,6 +61,12 @@ public class MainMenuManager : MonoBehaviour
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(level2SceneName);
+    }
+
+    public void LoadTestLevel()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(testLevelSceneName);
     }
 
     public void QuitGame()
