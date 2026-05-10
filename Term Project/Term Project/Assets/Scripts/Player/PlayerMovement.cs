@@ -147,7 +147,7 @@ public class PlayerMovement : MonoBehaviour
                 }
 
                 Jump();
-                Debug.Log("AudioManager.Instance: " + AudioManager.Instance);
+                //Debug.Log("AudioManager.Instance: " + AudioManager.Instance);
                 if (AudioManager.Instance != null)
                 {
                     AudioManager.Instance.PlayJump();
@@ -202,7 +202,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (isWallRunning)
         {
-            Debug.Log("Wall Running");
+            //Debug.Log("Wall Running");
             HandleWallRun();
         }
         else if (isSliding)
@@ -514,7 +514,7 @@ public class PlayerMovement : MonoBehaviour
 
     void WallJump()
     {
-        Debug.Log("Wall Jump");
+        //Debug.Log("Wall Jump");
         Vector3 wallNormal = Vector3.zero;
 
         if (wallLeft)
