@@ -61,6 +61,7 @@ public class PlayerMovement : MonoBehaviour
 
     private bool canDash = true;
     private bool isDashing = false;
+    private Coroutine dashCoroutine;
 
     private bool isSliding = false;
     private float slideTimer;
@@ -178,7 +179,7 @@ public class PlayerMovement : MonoBehaviour
                 StopWallRun();
             }
 
-            StartCoroutine(Dash());
+            dashCoroutine = StartCoroutine(Dash());
             if (AudioManager.Instance != null)
             {
                 AudioManager.Instance.PlayDash();
@@ -319,6 +320,7 @@ public class PlayerMovement : MonoBehaviour
 
         yield return new WaitForSeconds(dashCooldown);
         canDash = true;
+        dashCoroutine = null;
     }
 
     bool CanStartSlide()
@@ -421,6 +423,7 @@ public class PlayerMovement : MonoBehaviour
         isWallRunning = true;
         wallRunTimer = wallRunDuration;
         isJumping = false;
+        ResetDash();
 
         if (playerLook != null)
         {
@@ -430,6 +433,17 @@ public class PlayerMovement : MonoBehaviour
         {
             AudioManager.Instance.StartWallRunLoop();
         }
+    }
+
+    void ResetDash()
+    {
+        if (dashCoroutine != null)
+        {
+            StopCoroutine(dashCoroutine);
+            dashCoroutine = null;
+        }
+
+        canDash = true;
     }
 
     void StopWallRun()
